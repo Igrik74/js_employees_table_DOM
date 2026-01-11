@@ -5,7 +5,7 @@
 // ---------------------------
 const table = document.querySelector('table');
 const tbody = table.querySelector('tbody');
-const headers = table.querySelectorAll('th');
+const headers = table.querySelectorAll('thead th');
 const container = document.querySelector('.container');
 const sortOrder = {};
 let lastSortedKey = null;
@@ -166,7 +166,7 @@ tbody.addEventListener('dblclick', (e) => {
     return;
   }
 
-  const initialValue = td.innerText.replace(/\$/g, '');
+  const initialValue = td.innerText.replace(/[^0-9.-]+/g, '');
 
   td.innerHTML = `<input class="cell-input" value="${initialValue}" />`;
 
@@ -185,7 +185,7 @@ tbody.addEventListener('dblclick', (e) => {
 
     // Salary formatting
     if (td.cellIndex === 4) {
-      const num = Number(value);
+      const num = Number(value.replace(/[^0-9.-]+/g, ''));
 
       value = Number.isFinite(num)
         ? `$${num.toLocaleString('en-US')}`
