@@ -166,9 +166,15 @@ tbody.addEventListener('dblclick', (e) => {
     return;
   }
 
-  const initialValue = td.innerText.replace(/[^0-9.-]+/g, '');
+  const originalText = td.innerText; // always store original text
+  let inputValue = originalText;
 
-  td.innerHTML = `<input class="cell-input" value="${initialValue}" />`;
+  // Only strip non-numeric characters for Age (index 3) and Salary (index 4)
+  if (td.cellIndex === 3 || td.cellIndex === 4) {
+    inputValue = originalText.replace(/[^0-9.-]+/g, '');
+  }
+
+  td.innerHTML = `<input class="cell-input" value="${inputValue}" />`;
 
   const input = td.querySelector('input');
 
@@ -180,16 +186,16 @@ tbody.addEventListener('dblclick', (e) => {
     let value = input.value.trim();
 
     if (value === '') {
-      value = initialValue;
-    }
+      value = originalText;
+    } // restore original if empty
 
-    // Salary formatting
+    // Format Salary column
     if (td.cellIndex === 4) {
       const num = Number(value.replace(/[^0-9.-]+/g, ''));
 
       value = Number.isFinite(num)
         ? `$${num.toLocaleString('en-US')}`
-        : initialValue;
+        : originalText;
     }
 
     td.innerText = value;
